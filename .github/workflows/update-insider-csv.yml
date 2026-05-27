@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SINCE_DATE: "2025-01-01"
+      SINCE_DATE: "2026-05-27"
       USER_AGENT: "isispat-insider-tracker bjkim@isispat.com"
 
     steps:
