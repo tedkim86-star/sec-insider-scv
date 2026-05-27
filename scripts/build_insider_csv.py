@@ -15,7 +15,7 @@ OUTPUT_FILE = ROOT / "data" / "insider_raw_data.csv"
 TICKER_CONFIG_FILE = ROOT / "data" / "ticker_config.csv"
 
 USER_AGENT = os.environ.get("SEC_USER_AGENT", "isispat-insider-tracker bjkim@isispat.com")
-SINCE_DATE = os.environ.get("SINCE_DATE", "2026-05-26")
+SINCE_DATE = os.environ.get("SINCE_DATE", "2026-05-01")
 REQUEST_DELAY_SECONDS = float(os.environ.get("REQUEST_DELAY_SECONDS", "0.25"))
 
 RAW_HEADERS = [
