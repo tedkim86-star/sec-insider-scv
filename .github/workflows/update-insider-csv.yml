@@ -6,7 +6,6 @@ on:
     - cron: "10 0 * * *"
 
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   USER_AGENT: "isispat-insider-tracker bjkim@isispat.com"
 
 permissions:
@@ -25,10 +24,12 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Set SINCE_DATE to today in KST
+      - name: Set RUN_DATE and SINCE_DATE to today in KST
         run: |
+          echo "RUN_DATE=$(TZ=Asia/Seoul date +%F)" >> $GITHUB_ENV
           echo "SINCE_DATE=$(TZ=Asia/Seoul date +%F)" >> $GITHUB_ENV
-          echo "Using SINCE_DATE=$(TZ=Asia/Seoul date +%F)"
+          echo "RUN_DATE=$(TZ=Asia/Seoul date +%F)"
+          echo "SINCE_DATE=$(TZ=Asia/Seoul date +%F)"
 
       - name: Install dependencies
         run: pip install -r requirements.txt
@@ -36,11 +37,17 @@ jobs:
       - name: Build insider CSV
         run: python scripts/build_insider_csv.py
 
+      - name: Save daily CSV copy
+        run: |
+          mkdir -p data/daily
+          cp data/insider_raw_data.csv "data/daily/${RUN_DATE}_insider_raw_data.csv"
+          cp data/insider_raw_data.csv data/insider_raw_data_latest.csv
+
       - name: Commit updated CSV files
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add data/*.csv
-          git commit -m "Update insider CSV" || echo "No changes to commit"
+          git add data/*.csv data/daily/*.csv
+          git commit -m "Update insider CSV for ${RUN_DATE}" || echo "No changes to commit"
           git pull --rebase origin main
           git push origin main
