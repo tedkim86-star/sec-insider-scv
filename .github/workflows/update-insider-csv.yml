@@ -5,16 +5,16 @@ on:
   schedule:
     - cron: "10 0 * * *"
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  USER_AGENT: "isispat-insider-tracker bjkim@isispat.com"
+
 permissions:
   contents: write
 
 jobs:
   update:
     runs-on: ubuntu-latest
-
-    env:
-      SINCE_DATE: "2026-05-27"
-      USER_AGENT: "isispat-insider-tracker bjkim@isispat.com"
 
     steps:
       - name: Check out repository
@@ -24,6 +24,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
+      - name: Set SINCE_DATE to today in KST
+        run: |
+          echo "SINCE_DATE=$(TZ=Asia/Seoul date +%F)" >> $GITHUB_ENV
+          echo "Using SINCE_DATE=$(TZ=Asia/Seoul date +%F)"
 
       - name: Install dependencies
         run: pip install -r requirements.txt
