@@ -42,4 +42,5 @@ jobs:
           git config user.email "github-actions@github.com"
           git add data/*.csv
           git commit -m "Update insider CSV" || echo "No changes to commit"
-          git push
+          git pull --rebase origin main
+          git push origin main
